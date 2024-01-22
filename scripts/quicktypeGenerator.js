@@ -87,7 +87,9 @@ async function quicktypeGenerator(targetLanguage) {
 
     generatedCode.forEach((line, index) => {
     if (line.includes('quicktype_')) {
-        generatedCode[index] = line.replace(/quicktype_(\w+)/g, '$1_');
+        const propertyRegex = config.languages[targetLanguage].processing.propertyRegex;
+        const regex = new RegExp(propertyRegex.pattern, propertyRegex.flags);
+        generatedCode[index] = line.replace(regex, propertyRegex.replacement);
     }
 });
 

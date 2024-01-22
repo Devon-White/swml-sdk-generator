@@ -6,6 +6,11 @@
       "just-types": true
     },
     "processing": {
+      "propertyRegex": {
+        "pattern": "quicktype_(\\w+)",
+        "flags": "g",
+        "replacement": "$1_"
+      },
       "reservedWords": [
         "type",
         "id",
