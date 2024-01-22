@@ -47,6 +47,10 @@ function generateSchema(language) {
     const schema = generator.createSchema(config.type);
 
     if (schema) {
+        fs.mkdirSync(path.dirname(schemaOutputFile), { recursive: true });
+        fs.mkdirSync(path.dirname(finalOutputFile), { recursive: true });
+
+
         fs.writeFileSync(path.resolve(schemaOutputFile), JSON.stringify(schema, null, 2));
 
         // Adjust for reserved words

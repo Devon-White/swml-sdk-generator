@@ -22,7 +22,7 @@ async function quicktypeJSONSchema(targetLanguage, typeName, jsonSchemaString, r
 }
 
 function renamePropertiesInSchema(schema) {
-    const renameProperty = (obj, parentObj = null, parentKey = null) => {
+    const renameProperty = (obj, parentObj = null) => {
         for (const key in obj) {
             if (obj.hasOwnProperty(key)) {
                 const renamedKey = key.startsWith('quicktype_') ? key.replace('quicktype_', '') + '_' : key;
@@ -91,6 +91,8 @@ async function quicktypeGenerator(targetLanguage) {
     }
 });
 
+    // Ensure the directory exists before writing the file
+    fs.mkdirSync(path.dirname(outputDir), { recursive: true });
 
     fs.writeFileSync(path.resolve(outputDir), generatedCode.join('\n'));
     console.log(`Code generation for ${targetLanguage} completed.`);
