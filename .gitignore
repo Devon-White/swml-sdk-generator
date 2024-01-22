@@ -1,6 +1,7 @@
 openapi_spec.json
 openapi_spec.yaml
 node_modules
+yarn.lock
 yarn-error.log
 schema/*
 Generated_SDKs/csharp/*
@@ -8,4 +9,8 @@ Generated_SDKs/go/*
 Generated_SDKs/php/*
 Generated_SDKs/python/*
 Generated_SDKs/ruby/*
+# Project exclude paths
+/TypeScript_SDK/index.js
+/TypeScript_SDK/Section.js
+/TypeScript_SDK/SignalWireML.js
 .idea
