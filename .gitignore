@@ -8,4 +8,5 @@ Generated_SDKs/
 /TypeScript_SDK/index.js
 /TypeScript_SDK/Section.js
 /TypeScript_SDK/SignalWireML.js
+/TypeScript_SDK/SignalWireMLTypes.js
 .idea
