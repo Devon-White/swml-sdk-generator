@@ -1,0 +1,14 @@
+{
+  "name": "swml-sdk-generator",
+  "version": "0.1.0",
+    "scripts": {
+    "start": "node index.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@adobe/jsonschema2md": "^7.1.5",
+    "quicktype-core": "^23.0.81",
+    "ts-json-schema-generator": "^1.5.0",
+    "yaml": "^2.3.4"
+  }
+}
