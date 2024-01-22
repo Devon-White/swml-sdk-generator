@@ -1,7 +1,6 @@
 openapi_spec.json
 openapi_spec.yaml
 node_modules
-yarn.lock
 yarn-error.log
 schema/*
 Generated_SDKs/csharp/*
