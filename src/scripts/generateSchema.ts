@@ -4,8 +4,6 @@ import path from 'path';
 import quicktypeConfig from '../../config/quicktypeConfig.json'
 
 
-
-
 const schemaFileName = path.resolve('../../types/TypeScript_SDK/SignalWireMLTypes.ts');
 const tsConfig = path.resolve('./types/TypeScript_SDK/tsconfig.json');
 const schemaOutputFile = path.resolve('./schema/generated-schema.json');
