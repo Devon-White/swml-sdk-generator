@@ -1,10 +1,13 @@
-const { generateSchema } = require('./scripts/generateSchema');
-const { quicktypeGenerator } = require('./scripts/quicktypeGenerator');
-const fs = require('fs');
+import { generateSchema } from './scripts/generateSchema.js';
+import { quicktypeGenerator } from './scripts/quicktypeGenerator.js';
+import fs from 'fs';
+import path from "path";
 
-function main(targetLanguage) {
+const configPath = path.resolve('./config/quicktypeConfig.json');
+
+function main(targetLanguage: string): void {
     try {
-        const config = JSON.parse(fs.readFileSync('./config/quicktypeConfig.json', 'utf8'));
+        const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
         const supportedLanguages = Object.keys(config.languages);
 
         if (targetLanguage === '*') {

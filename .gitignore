@@ -5,8 +5,10 @@ yarn-error.log
 schema/*
 Generated_SDKs/
 # Project exclude paths
-/TypeScript_SDK/index.js
-/TypeScript_SDK/Section.js
-/TypeScript_SDK/SignalWireML.js
-/TypeScript_SDK/SignalWireMLTypes.js
+/types/TypeScript_SDK/index.js
+/types/TypeScript_SDK/Section.js
+/types/TypeScript_SDK/SignalWireML.js
+/types/TypeScript_SDK/SignalWireMLTypes.js
 .idea
+dist
+out
