@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "main": "dist/src/index.js",
   "scripts": {
+    "prebuild": "ts-node src/scripts/setupSubTree.ts",
     "build": "tsc",
     "start": "node .",
     "jsonschema2md:python": "shx mkdir -p Generated_SDKS/python/docs && jsonschema2md -o Generated_SDKS/python/docs -d schema -h false -x -",
