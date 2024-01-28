@@ -2,7 +2,7 @@ import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const subtreePath: string = path.resolve(`types/SignalWireMLTypes`); // Adjust the path as necessary
+const subtreePath: string = path.resolve(`./types/SignalWireMLTypes`); // Adjust the path as necessary
 const subtreeUrl: string = 'https://github.com/andremartinssw/SignalWireML.git';
 const subtreeBranch: string = 'main'; // Replace with the actual branch name if different
 
