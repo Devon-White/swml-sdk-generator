@@ -49,6 +49,7 @@ const addOrUpdateSubtree = (): Promise<void> => {
           execSync(`git subtree pull --prefix=${subtreePath} original-subtree-remote ${subtreeBranch} --squash`, { stdio: 'inherit' });
           console.log('Latest updates fetched successfully.');
         } catch (pullError) {
+          console.error(pullError)
           console.error('Error during subtree pull. If the subtree was never added, try adding it first.');
           reject(pullError);
         }
