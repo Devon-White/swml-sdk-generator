@@ -94,7 +94,7 @@ async function quicktypeGenerator(targetLanguage: string): Promise<void> {
     await ensureDirectoryExists(outputDir);
 
     const { lines: generatedCode } = await quicktypeJSONSchema({
-        targetLanguage,
+        targetLanguage: targetLanguage,
         typeName: "Instruction",
         jsonSchemaString: JSON.stringify(schema),
         rendererOptions: languageConfig.rendererOptions

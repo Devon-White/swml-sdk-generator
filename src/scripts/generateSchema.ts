@@ -1,5 +1,5 @@
 import { createGenerator, Config } from 'ts-json-schema-generator';
-import { promises as fs } from 'fs';
+import fs from 'fs';
 import path from 'path';
 import quicktypeConfigModule from '../../config/quicktypeConfig.json';
 import { QuicktypeConfig } from 'QuicktypeConfig';
@@ -44,7 +44,6 @@ async function generateSchema(language: string): Promise<void> {
 
   const schemaFileName = path.resolve('./types/SignalWireML_TS/src/SignalWireML/SignalWireMLTypes.ts');
   const tsConfig = path.resolve('./types/SignalWireML_TS/tsconfig.json');
-  const schemaOutputFile = path.resolve('./schema/generated-schema.json');
   const postProcessSchema = path.resolve('./schema/postProcess.json');
 
   const config: Config = {
@@ -56,10 +55,8 @@ async function generateSchema(language: string): Promise<void> {
   const generator = createGenerator(config);
   const schema = generator.createSchema(config.type);
 
-  try {
-    await ensureDirectoryExists(path.dirname(schemaOutputFile));
-    await ensureDirectoryExists(path.dirname(postProcessSchema));
 
+  try {
     const reservedWords = quicktypeConfig.languages[language]?.processing?.reservedWords ?? [];
     adjustReservedWords(schema, reservedWords);
 
@@ -71,8 +68,10 @@ async function generateSchema(language: string): Promise<void> {
       definitions: schema.definitions,
     };
 
-    await fs.writeFile(schemaOutputFile, JSON.stringify(schema, null, 2));
-    await fs.writeFile(postProcessSchema, JSON.stringify(tempSchema, null, 2));
+    let schemaJson = JSON.stringify(tempSchema, null, 2);
+
+    fs.writeFileSync(postProcessSchema, schemaJson, 'utf8');
+    console.log("Schema generation completed.")
   } catch (error) {
     console.error("Schema generation failed:", error);
   }
