@@ -42,7 +42,7 @@ async function generateSchema(language: string): Promise<void> {
     throw new Error(`Language ${language} is not defined in the quicktypeConfig.json file.`);
   }
 
-  const schemaFileName = path.resolve('./types/SignalWireML_TS/src/SignalWireML/SignalWireML.ts');
+  const schemaFileName = path.resolve('./types/SignalWireML_TS/src/SignalWireML/SignalWireMLTypes.ts');
   const tsConfig = path.resolve('./types/SignalWireML_TS/tsconfig.json');
   const schemaOutputFile = path.resolve('./schema/generated-schema.json');
   const postProcessSchema = path.resolve('./schema/postProcess.json');
