@@ -1,26 +1,27 @@
-import { quicktype, InputData, JSONSchemaInput, FetchingJSONSchemaStore, RendererOptions, JSONSchema } from "quicktype-core";
+// quicktypeGenerator.ts
+
+import { quicktype, InputData, JSONSchemaInput, FetchingJSONSchemaStore } from "quicktype-core";
 import fs from "fs";
 import path from "path";
+import { ensureDirectoryExists } from "../utils/checkDirectory"; // Ensure this path matches the location of your utility
+import { QuicktypeConfig, RendererOptions } from "QuicktypeConfig"; // Ensure this path matches the location of your type definitions
 
-const configPath = path.resolve("./config/quicktypeConfig.json");
-const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+// Directly import the configuration as a module
+import quicktypeConfigModule from "../../config/quicktypeConfig.json";
+const config: QuicktypeConfig = quicktypeConfigModule;
+
 const postProcessedSchema = path.resolve("./schema/postProcess.json");
-const finalSchema = "./schema/final.schema.json";
+const finalSchema = path.resolve("./schema/final.schema.json");
 
-
-export interface QuicktypeOptions {
+interface QuicktypeOptions {
     targetLanguage: string;
     typeName: string;
     jsonSchemaString: string;
-    rendererOptions: RendererOptions;
+    rendererOptions: RendererOptions
 }
 
 async function quicktypeJSONSchema(options: QuicktypeOptions) {
-    const { targetLanguage,
-        typeName,
-        jsonSchemaString,
-        rendererOptions
-    } = options;
+    const { targetLanguage, typeName, jsonSchemaString, rendererOptions } = options;
 
     const schemaInput = new JSONSchemaInput(new FetchingJSONSchemaStore());
     await schemaInput.addSource({ name: typeName, schema: jsonSchemaString });
@@ -28,23 +29,21 @@ async function quicktypeJSONSchema(options: QuicktypeOptions) {
     const inputData = new InputData();
     inputData.addInput(schemaInput);
 
-    return await quicktype({
+    return quicktype({
         inputData,
         lang: targetLanguage,
-        rendererOptions
+        rendererOptions,
     });
 }
 
-function renamePropertiesInSchema(schema: JSONSchema): JSONSchema {
+function renamePropertiesInSchema(schema: any): any {
     const renameProperty = (obj: any, parentObj: any = null) => {
         for (const key in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                const renamedKey = key.startsWith('quicktype_') ? key.replace('quicktype_', '') + '_' : key;
-
-                if (key !== renamedKey) {
+                const renamedKey = key.startsWith('quicktype_') ? key.substring('quicktype_'.length) : key;
+                if (renamedKey !== key) {
                     obj[renamedKey] = obj[key];
                     delete obj[key];
-
                     if (parentObj && Array.isArray(parentObj.required)) {
                         const requiredIndex = parentObj.required.indexOf(key);
                         if (requiredIndex !== -1) {
@@ -52,7 +51,6 @@ function renamePropertiesInSchema(schema: JSONSchema): JSONSchema {
                         }
                     }
                 }
-
                 if (typeof obj[renamedKey] === 'object') {
                     renameProperty(obj[renamedKey], obj);
                 }
@@ -60,29 +58,40 @@ function renamePropertiesInSchema(schema: JSONSchema): JSONSchema {
         }
     };
 
-    renameProperty(schema, null);
+    renameProperty(schema);
     return schema;
 }
 
 async function quicktypeGenerator(targetLanguage: string): Promise<void> {
-    if (!fs.existsSync(configPath)) {
-        console.error(`Configuration file not found: ${configPath}`);
-        return;
-    }
-
-    if (!fs.existsSync(postProcessedSchema)) {
-        console.error(`Schema file not found: ${postProcessedSchema}`);
-        return;
-    }
-
-    let jsonSchemaString = fs.readFileSync(postProcessedSchema, "utf8");
-    let schema = JSON.parse(jsonSchemaString);
-
+    const jsonSchemaString = fs.readFileSync(postProcessedSchema, "utf8");
+    const schema = JSON.parse(jsonSchemaString);
     const languageConfig = config.languages[targetLanguage];
-    if (!languageConfig.rendererOptions) {
-        console.error(`No renderer options found for language: ${targetLanguage}`);
-        return;
+
+
+    // Ensure 'processing' is defined
+    if (!languageConfig?.processing) {
+        throw new Error(`'processing' configuration not set for language '${targetLanguage}' in quicktypeConfig.`);
     }
+
+    // Ensure 'outputDir' and 'propertyRegex' are defined within 'processing'
+    const { outputDir: outputFilePath, propertyRegex } = languageConfig.processing;
+
+    if (!outputFilePath) {
+        throw new Error(`'outputDir' not set for language '${targetLanguage}' in quicktypeConfig.`);
+    }
+
+    if (!propertyRegex) {
+        throw new Error(`'propertyRegex' not set for language '${targetLanguage}' in quicktypeConfig.`);
+    }
+
+    // Ensure 'rendererOptions' is defined
+    if (!languageConfig.rendererOptions) {
+        throw new Error(`'rendererOptions' not set for language '${targetLanguage}' in quicktypeConfig.`);
+    }
+
+    // Ensure the output directory exists (extract directory part from 'outputFilePath')
+    const outputDir = path.dirname(outputFilePath);
+    await ensureDirectoryExists(outputDir);
 
     const { lines: generatedCode } = await quicktypeJSONSchema({
         targetLanguage,
@@ -91,25 +100,19 @@ async function quicktypeGenerator(targetLanguage: string): Promise<void> {
         rendererOptions: languageConfig.rendererOptions
     });
 
-    const outputDir = config.languages[targetLanguage].processing.outputDir;
-
     generatedCode.forEach((line, index) => {
         if (line.includes('quicktype_')) {
-            const propertyRegex = config.languages[targetLanguage].processing.propertyRegex;
             const regex = new RegExp(propertyRegex.pattern, propertyRegex.flags);
             generatedCode[index] = line.replace(regex, propertyRegex.replacement);
         }
     });
 
-    fs.mkdirSync(path.dirname(outputDir), { recursive: true });
 
-    fs.writeFileSync(path.resolve(outputDir), generatedCode.join('\n'));
+    fs.writeFileSync(outputFilePath, generatedCode.join('\n'));
     console.log(`Code generation for ${targetLanguage} completed.`);
 
-    schema = renamePropertiesInSchema(schema);
-
-    fs.writeFileSync(path.resolve(finalSchema), JSON.stringify(schema, null, 2));
-
+    const modifiedSchema = renamePropertiesInSchema(schema);
+    fs.writeFileSync(finalSchema, JSON.stringify(modifiedSchema, null, 2));
 }
 
 export { quicktypeGenerator };
