@@ -6,6 +6,11 @@ import { QuicktypeConfig } from 'QuicktypeConfig';
 import { ensureDirectoryExists } from '../utils/checkDirectory';
 
 
+const schemaFileName = path.resolve('./types/SignalWireML_TS/src/SignalWireML/SignalWireMLTypes.ts');
+const tsConfig = path.resolve('./types/SignalWireML_TS/tsconfig.json');
+const postProcessSchema = path.resolve('./schema/postProcess.json');
+
+
 interface SchemaObject {
   // Define the structure of your schema object here
   [key: string]: any; // Replace 'any' with more specific types if known
@@ -37,14 +42,14 @@ function adjustReservedWords(obj: SchemaObject, reservedWords: string[]): Schema
 }
 
 async function generateSchema(language: string): Promise<void> {
-  const quicktypeConfig: QuicktypeConfig = quicktypeConfigModule; // Note: Adjust according to your import method
+  const quicktypeConfig: QuicktypeConfig = quicktypeConfigModule;
   if (!quicktypeConfig.languages[language]) {
     throw new Error(`Language ${language} is not defined in the quicktypeConfig.json file.`);
   }
 
-  const schemaFileName = path.resolve('./types/SignalWireML_TS/src/SignalWireML/SignalWireMLTypes.ts');
-  const tsConfig = path.resolve('./types/SignalWireML_TS/tsconfig.json');
-  const postProcessSchema = path.resolve('./schema/postProcess.json');
+  let postProcessDir = path.dirname(postProcessSchema);
+  await ensureDirectoryExists(postProcessDir);
+
 
   const config: Config = {
     path: schemaFileName,
