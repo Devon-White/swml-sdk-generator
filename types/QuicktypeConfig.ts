@@ -1,7 +1,4 @@
-
-export interface RendererOptions {
-  [option: string]: string | boolean;
-}
+import { RendererOptions } from 'quicktype-core';
 
 export interface Processing {
   propertyRegex?: {
@@ -9,6 +6,27 @@ export interface Processing {
     flags: string;
     replacement: string;
   };
+  instructionUnion: {
+    addInstructionUnion: boolean;
+    rawInstructionType?: string | null;
+    typeSeparator?: string | null;
+  };
+  customMappings?: null | {
+    endOfImportsIdentifier?: null | string;
+    mappings?: null |
+      {
+        toType: string;
+        fromType: {
+            pattern: string;
+            flags: string;
+        }
+      }[]
+    typeDeclarations?: null |
+        {
+          type: string;
+          declaration: string;
+        }[]
+  }
   reservedWords?: string[];
   outputDir?: string;
 }

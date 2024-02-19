@@ -11,6 +11,30 @@
           "flags": "g",
           "replacement": "$1_"
         },
+        "instructionUnion": {
+          "addInstructionUnion": true,
+          "rawInstructionType": "Instruction = Union[$1]",
+          "typeSeparator": ", "
+        },
+        "customMappings": {
+          "endOfImportsIdentifier": "^import |^from [\\w\\.]+ import ",
+          "mappings": [
+
+            {
+              "toType": "SWAIG",
+              "fromType": {
+                "pattern": "\\bSwaig\\b",
+                "flags": "gi"
+              }
+            }
+          ],
+          "typeDeclarations": [
+            {
+              "type": "AnyObject",
+              "declaration": "@dataclass\nclass AnyObject(dict):\n    \"\"\"This type is a placeholder for any object.\"\"\"\n    def __init__(self, *args, **kwargs):\n        super().__init__(*args, **kwargs)"
+            }
+          ]
+        },
         "reservedWords": [
           "type",
           "id",

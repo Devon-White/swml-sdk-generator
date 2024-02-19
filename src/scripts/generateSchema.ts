@@ -9,6 +9,7 @@ import { ensureDirectoryExists } from '../utils/checkDirectory';
 const schemaFileName = path.resolve('./types/SignalWireML_TS/src/SignalWireML/SignalWireMLTypes.ts');
 const tsConfig = path.resolve('./types/SignalWireML_TS/tsconfig.json');
 const postProcessSchema = path.resolve('./schema/postProcess.json');
+const originalSchema = path.resolve('./schema/originalschema.json');
 
 
 interface SchemaObject {
@@ -59,6 +60,9 @@ async function generateSchema(language: string): Promise<void> {
 
   const generator = createGenerator(config);
   const schema = generator.createSchema(config.type);
+
+
+  fs.writeFileSync(originalSchema, JSON.stringify(schema, null, 2), 'utf8');
 
 
   try {

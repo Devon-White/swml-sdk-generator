@@ -14,7 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "@adobe/jsonschema2md": "^7.1.5",
-    "quicktype-core": "^23.0.81",
+    "quicktype-core": "^23.0.104",
     "ts-json-schema-generator": "^1.5.0"
   },
   "devDependencies": {
