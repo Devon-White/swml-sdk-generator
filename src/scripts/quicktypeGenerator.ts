@@ -70,7 +70,6 @@ async function handleCustomMappings(generatedCode: string[], customMappings: Pro
         for (let i = 0; i < generatedCode.length; i++) {
             if (endOfImportsRegex.test(generatedCode[i])) {
                 endOfImportsIndex = i;
-                break; // Once found, no need to continue the loop
             }
         }
 

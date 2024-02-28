@@ -13,7 +13,7 @@
         },
         "instructionUnion": {
           "addInstructionUnion": true,
-          "rawInstructionType": "Instruction = Union[$1]",
+          "rawInstructionType": "_InstructionType = Union[$1]",
           "typeSeparator": ", "
         },
         "customMappings": {
@@ -32,6 +32,10 @@
             {
               "type": "AnyObject",
               "declaration": "@dataclass\nclass AnyObject(dict):\n    \"\"\"This type is a placeholder for any object.\"\"\"\n    def __init__(self, *args, **kwargs):\n        super().__init__(*args, **kwargs)"
+            },
+            {
+              "type": "TestObject",
+                "declaration": "@dataclass\nclass TestObject(dict):\n    \"\"\"This type is a placeholder for any object.\"\"\"\n    def __init__(self, *args, **kwargs):\n        super().__init__(*args, **kwargs)"
             }
           ]
         },
