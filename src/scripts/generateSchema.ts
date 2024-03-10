@@ -1,23 +1,27 @@
-import { createGenerator, Config } from 'ts-json-schema-generator';
+import { createGenerator, Config  } from 'ts-json-schema-generator';
 import fs from 'fs';
 import path from 'path';
-import quicktypeConfigModule from '../../config/quicktypeConfig.json';
-import { QuicktypeConfig } from 'QuicktypeConfig';
-import { ensureDirectoryExists } from '../utils/checkDirectory';
+import quicktypeConfig from '../../config/quicktypeConfig.json'
 
 
-const schemaFileName = path.resolve('./types/SignalWireML_TS/src/SignalWireML/SignalWireMLTypes.ts');
-const tsConfig = path.resolve('./types/SignalWireML_TS/tsconfig.json');
+const schemaFileName = path.resolve('../../types/SignalWireMLTypes.ts');
+const tsConfig = path.resolve('./types/tsconfig.json');
+const schemaOutputFile = path.resolve('./schema/generated-schema.json');
 const postProcessSchema = path.resolve('./schema/postProcess.json');
-const originalSchema = path.resolve('./schema/originalschema.json');
 
+const config: Config = {
+    path: schemaFileName,
+    tsconfig: tsConfig,
+    type: '*' // Adjust as needed for your specific type
+};
+
+console.log(config);
 
 interface SchemaObject {
   // Define the structure of your schema object here
   [key: string]: any; // Replace 'any' with more specific types if known
 }
 
-// Utility function to adjust reserved words in the schema
 function adjustReservedWords(obj: SchemaObject, reservedWords: string[]): SchemaObject {
   if (Array.isArray(obj)) {
     return obj.map(item => adjustReservedWords(item, reservedWords));
@@ -42,48 +46,40 @@ function adjustReservedWords(obj: SchemaObject, reservedWords: string[]): Schema
   return obj;
 }
 
-async function generateSchema(language: string): Promise<void> {
-  const quicktypeConfig: QuicktypeConfig = quicktypeConfigModule;
-  if (!quicktypeConfig.languages[language]) {
-    throw new Error(`Language ${language} is not defined in the quicktypeConfig.json file.`);
-  }
-
-  let postProcessDir = path.dirname(postProcessSchema);
-  await ensureDirectoryExists(postProcessDir);
 
 
-  const config: Config = {
-    path: schemaFileName,
-    tsconfig: tsConfig,
-    type: '*',
-  };
-
-  const generator = createGenerator(config);
-  const schema = generator.createSchema(config.type);
 
 
-  fs.writeFileSync(originalSchema, JSON.stringify(schema, null, 2), 'utf8');
 
+function generateSchema(language: string): void {
+    console.log("Generating schema...");
 
-  try {
-    const reservedWords = quicktypeConfig.languages[language]?.processing?.reservedWords ?? [];
-    adjustReservedWords(schema, reservedWords);
+    const generator = createGenerator(config);
+    const schema: SchemaObject = generator.createSchema(config.type);
 
-    const tempSchema = {
-      title: "SignalWireML",
-      $id: "SignalWireML",
-      $schema: "http://json-schema.org/draft-07/schema#",
-      $ref: "#/definitions/Instruction",
-      definitions: schema.definitions,
-    };
+    if (schema) {
+        fs.mkdirSync(path.dirname(schemaOutputFile), { recursive: true });
+        fs.mkdirSync(path.dirname(postProcessSchema), { recursive: true });
 
-    let schemaJson = JSON.stringify(tempSchema, null, 2);
+        fs.writeFileSync(path.resolve(schemaOutputFile), JSON.stringify(schema, null, 2));
 
-    fs.writeFileSync(postProcessSchema, schemaJson, 'utf8');
-    console.log("Schema generation completed.")
-  } catch (error) {
-    console.error("Schema generation failed:", error);
-  }
+        const reservedWords = quicktypeConfig.languages.python.processing.reservedWords
+        adjustReservedWords(schema, reservedWords);
+
+        const tempSchema = {
+            "title": "SignalWireML",
+            "$id": "SignalWireML",
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "$ref": "#/definitions/Instruction",
+            "definitions": schema.definitions
+        };
+
+        fs.writeFileSync(path.resolve(postProcessSchema), JSON.stringify(tempSchema, null, 2));
+
+        console.log("Final schema generated!");
+    } else {
+        console.log("Schema generation failed!");
+    }
 }
 
 export { generateSchema };

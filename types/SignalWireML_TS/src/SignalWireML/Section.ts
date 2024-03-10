@@ -1,4 +1,4 @@
-import { Instruction } from "./SignalWireMLTypes";
+import { Instruction } from "./SignalWireML";
 
 export class Section {
     private name: string;

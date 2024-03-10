@@ -3,10 +3,8 @@
   "version": "0.1.0",
   "main": "dist/src/index.js",
   "scripts": {
-    "postinstall": "yarn install:subtree",
-    "install:subtree": "cd types/SignalWireML_TS && yarn install",
     "prebuild": "ts-node src/scripts/setupSubTree.ts",
-    "build": "cd types/SignalWireML_TS && tsc && cd ../../ && tsc",
+    "build": "tsc",
     "start": "node .",
     "jsonschema2md:python": "shx mkdir -p Generated_SDKS/python/docs && jsonschema2md -o Generated_SDKS/python/docs -d schema -h false -x -",
     "build:start": "npm run build && npm run start && npm run jsonschema2md:python"
@@ -14,7 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "@adobe/jsonschema2md": "^7.1.5",
-    "quicktype-core": "^23.0.104",
+    "quicktype-core": "^23.0.81",
     "ts-json-schema-generator": "^1.5.0"
   },
   "devDependencies": {
@@ -24,4 +22,3 @@
     "typescript": "^5.3.3"
   }
 }
-

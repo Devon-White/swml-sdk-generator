@@ -77,9 +77,9 @@
   integrity sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==
 
 "@types/node@^20.11.5":
-  version "20.11.10"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.10.tgz#6c3de8974d65c362f82ee29db6b5adf4205462f9"
-  integrity sha512-rZEfe/hJSGYmdfX9tvcPMYeYPW2sNl50nsw4jZmRcaG0HIAb0WYEpsB05GOb53vjqpyE9GUhlDQ4jLSoB5q9kg==
+  version "20.11.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.5.tgz#be10c622ca7fcaa3cf226cf80166abc31389d86e"
+  integrity sha512-g557vgQjUUfN76MZAN/dt1z3dzcUsimuysco0KeluHgrPdJXkP/XdAURgyO2W9fZWHRtRBiVKzKn8vyOAwlG+w==
   dependencies:
     undici-types "~5.26.4"
 
@@ -988,10 +988,10 @@ process@^0.11.10:
   resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
   integrity sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==
 
-quicktype-core@^23.0.104:
-  version "23.0.104"
-  resolved "https://registry.yarnpkg.com/quicktype-core/-/quicktype-core-23.0.104.tgz#2cb5659255a28ee5371a0e5bfd81eb6ee94edf74"
-  integrity sha512-Y/9/hO0w4lYbacxxWdSyBhfZgs2kXELR21tawGFz7MICgxKX9KaPGLH3YQEd3NsX7KNZKdWPZdxkImgZL0RnQw==
+quicktype-core@^23.0.81:
+  version "23.0.81"
+  resolved "https://registry.yarnpkg.com/quicktype-core/-/quicktype-core-23.0.81.tgz#a3c49ae7cffd6ca0b1094a178bcd3f4463b58eea"
+  integrity sha512-iJQpCEzSQIkffJPS5NC+0w+Rq9faGgz09L+WIbseu1toFfj+M/3KTG5jhzdY/uN88fWosAom2fMoEADA403+rQ==
   dependencies:
     "@glideapps/ts-necessities" "2.1.3"
     "@types/urijs" "^1.19.19"
