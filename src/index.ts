@@ -1,31 +1,33 @@
-import { generateSchema } from './scripts/generateSchema.js';
-import { quicktypeGenerator } from './scripts/quicktypeGenerator.js';
-import fs from 'fs';
-import path from "path";
 
-const configPath = path.resolve('./config/quicktypeConfig.json');
+import { generateSchema } from './scripts/generateSchema';
+import { quicktypeGenerator } from './scripts/quicktypeGenerator';
+import { QuicktypeConfig } from 'QuicktypeConfig';
+import quicktypeConfigModule from '../config/quicktypeConfig.json';
 
-function main(targetLanguage: string): void {
+async function main(targetLanguage: string): Promise<void> {
     try {
-        const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+        // Directly use the imported JSON module
+        const config: QuicktypeConfig = quicktypeConfigModule;
+
         const supportedLanguages = Object.keys(config.languages);
 
         if (targetLanguage === '*') {
             console.log('Generating SDKs for all supported languages...');
-            supportedLanguages.forEach(lang => {
-                generateSchema(lang);
-                quicktypeGenerator(lang).then(() => {
+            for (const lang of supportedLanguages) {
+                await generateSchema(lang);
+                await quicktypeGenerator(lang).then(() => {
                     console.log(`SDK generation completed for ${lang}`);
                 });
-            });
+            }
         } else {
             if (supportedLanguages.includes(targetLanguage)) {
-                generateSchema(targetLanguage);
-                quicktypeGenerator(targetLanguage).then(() => {
+                await generateSchema(targetLanguage);
+                await quicktypeGenerator(targetLanguage).then(() => {
                     console.log(`Generation completed!\nFiles are located in ./Generated_SDKs/${targetLanguage}`);
                 });
             } else {
-                console.log(`Target language '${targetLanguage}' is not supported.`);
+                console.error(`Target language '${targetLanguage}' is not supported.`);
+                process.exit(1);
             }
         }
     } catch (error) {
